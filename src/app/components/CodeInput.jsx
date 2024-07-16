@@ -2,32 +2,25 @@
 import React, { useState, useEffect } from 'react';
 
 const CodeInput = ({ lines, onComplete }) => {
-  const [currentLine, setCurrentLine] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [input, setInput] = useState('');
   const [isCorrect, setIsCorrect] = useState(true);
 
   const handleInputChange = (e) => {
-    const value = e.target.value;
-    const currentCode = lines[currentLine];
-    const currentChar = currentCode[currentCharIndex];
+    const value = e.target.value.replace(/\s+/g, '');
+    const currentCode = lines[currentLineIndex].replace(/\s+/g, '');
 
-    if (value === currentChar) {
-      setInput('');
-      setCurrentCharIndex(currentCharIndex + 1);
-      setIsCorrect(true);
-
-      if (currentCharIndex + 1 === currentCode.length) {
-        if (currentLine + 1 === lines.length) {
-          onComplete();
-        } else {
-          setCurrentLine(currentLine + 1);
-          setCurrentCharIndex(0);
-        }
-      }
-    } else if (currentCode.startsWith(value)) {
+    if (currentCode.startsWith(value)) {
       setInput(value);
       setIsCorrect(true);
+
+      if (value === currentCode) {
+        setInput('');
+        setCurrentLineIndex(currentLineIndex + 1);
+        if (currentLineIndex + 1 === lines.length) {
+          onComplete();
+        }
+      }
     } else {
       setIsCorrect(false);
     }
@@ -36,36 +29,29 @@ const CodeInput = ({ lines, onComplete }) => {
   useEffect(() => {
     setInput('');
     setIsCorrect(true);
-  }, [currentLine, currentCharIndex]);
+  }, [currentLineIndex]);
 
   return (
     <div className="flex flex-col items-center">
-      {lines.map((line, index) => (
-        <div key={index} className="flex">
-          {line.split('').map((char, charIndex) => (
-           <span
-           key={charIndex}
-           className={
-             index === currentLine && charIndex === currentCharIndex
-               ? 'blinking underline'
-               : ''
-           }
-           style={{
-             color: index === currentLine && char === input ? 'green' : '',
-             color: index === currentLine && charIndex === currentCharIndex && !isCorrect ? 'red' : '',
-           }}
-         >
-           {char}
-         </span>
-         
-          ))}
-        </div>
-      ))}
+      <div className="flex text-2xl md:text-3xl lg:text-4xl">
+        {lines[currentLineIndex].split('').map((char, charIndex) => (
+          <span
+            key={charIndex}
+            className={`${
+              charIndex === input.length ? 'blinking underline' : ''
+            } ${charIndex < input.length ? 'text-green-500' : ''} ${
+              charIndex === input.length && !isCorrect ? 'text-red-500' : ''
+            }`}
+          >
+            {char}
+          </span>
+        ))}
+      </div>
       <input
-        type="text"
+        type="text" 
         value={input}
         onChange={handleInputChange}
-        className={`opacity-0 absolute ${isCorrect ? 'border-black' : 'border-red-500'}`}
+        className={`absolute opacity-0 text-4xl ${isCorrect ? 'border-black' : 'border-red-500'}`}
         autoFocus
       />
     </div>

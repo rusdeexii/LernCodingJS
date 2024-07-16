@@ -33,6 +33,14 @@ export default function ProblemDetail() {
     fetchData();
   }, [id]);
 
+  const getCodeLines = () => {
+    if (problem && problem.result) {
+      const resultObject = problem.result[0];
+      return Object.values(resultObject).map(line => line.replace(/\s+/g, ''));
+    }
+    return [];
+  };
+
   return (
     <div className="flex flex-col items-center h-screen p-8">
       {isLoading ? (
@@ -41,14 +49,14 @@ export default function ProblemDetail() {
         </div>
       ) : (
         <>
-          <h1 className="text-6xl font-bold text-center mb-8">{problem.title}</h1>
+          <h1 className="text-6xl font-bold text-center mb-8">Challenge: {problem?.title}</h1>
           <div className="prose prose-slate prose-lg text-slate-600 text-center mb-8">
-            <p>{problem.description}</p>
+            <p>{problem?.description}</p>
           </div>
           <div>
-            <h1 className="text-center mb-4">พิมพ์ตามโค้ดด้านล่างนี้ได้เลย!:</h1>
-            {problem.result && (
-              <CodeInput lines={problem.result.split('\n')} onComplete={handleComplete} />
+            <h1 className="text-center mb-6">พิมพ์ตามโค้ดด้านล่างนี้ได้เลย!:</h1>
+            {problem?.result && (
+              <CodeInput lines={getCodeLines()} onComplete={handleComplete} />
             )}
           </div>
         </>

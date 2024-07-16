@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "type": "beginner",
+    "title": "ตรวจสอบข้อความ",
+    "description": "เขียนฟังก์ชั่นที่ตรวจสอบว่าเลขที่รับเข้ามาเป็นพิมพ์ใหญ่หรือพิมพ์เล็ก",
+    "image": "/img/ch1.jpg",
+    "result": [{
+      "1": "functioncheckString(input){",
+      "2": "letallCapital=/^[A-Z]+$/.test(input);",
+      "3": "letallSmall=/^[a-z]+$/.test(input);",
+      "4": "if(allCapital){",
+      "5": "console.log(\"AllCapitalLetter\");",
+      "6": "}elseif(allSmall){",
+      "7": "console.log(\"AllSmallLetter\");",
+      "8": "}else{",
+      "9": "console.log(\"Mix\");",
+      "10": "}",
+      "11": "}",
+      "12": "letinput=\"Hello\";",
+      "13": "checkString(input);"
+    }]
+  },
+  {
+    "id": 2,
+    "type": "beginner",
+    "title": "ตรวจสอบเลขคู่หรือคี่",
+    "description": "เขียนฟังก์ชั่นที่ตรวจสอบว่าเลขที่รับเข้ามาเป็นเลขคู่หรือเลขคี่",
+    "image": "/img/ch1.jpg",
+    "result": [{
+      "1": "functioncheckEvenOrOdd(number){",
+      "2": "if(number%2===0){",
+      "3": "console.log(`${number}เป็นเลขคู่`);",
+      "4": "}else{",
+      "5": "console.log(`${number}เป็นเลขคี่`);",
+      "6": "}",
+      "7": "}",
+      "8": "constnumbersToTest=[1,2,3,4,5,6,7,8,9,10];",
+      "9": "numbersToTest.forEach(number=>{",
+      "10": "checkEvenOrOdd(number);",
+      "11": "});"
+    }]
+  }
+
+
+  ,
+    {
+      "id": 3,
+      "type": "beginner",
+      "title": "คำนวณพื้นที่สี่เหลี่ยม",
+      "description": "เขียนฟังก์ชั่นที่คำนวณพื้นที่ของสี่เหลี่ยมจากความกว้างและความยาวที่รับเข้ามา",
+      "image": "/img/ch3.jpg",
+      "result":""
+    },
+    {
+      "id": 4,
+      "title": "เช็คคำในประโยค",
+      "description": "โปรแกรมนี้จะตรวจสอบว่าคำที่ระบุ มีอยู่ในประโยคที่กำหนดหรือไม่!",
+      "image": "/img/ch3.jpg",
+      "result":""
+    },
+    {
+      "id": 5,
+      "title": "คำนวณพื้นที่สี่เหลี่ยม",
+      "description": "เขียนฟังก์ชั่นที่คำนวณพื้นที่ของสี่เหลี่ยมจากความกว้างและความยาวที่รับเข้ามา",
+      "image": "/img/ch3.jpg",
+      "result":""
+    },
+    {
+      "id": 6,
+      "title": "คำนวณพื้นที่สี่เหลี่ยม",
+      "description": "เขียนฟังก์ชั่นที่คำนวณพื้นที่ของสี่เหลี่ยมจากความกว้างและความยาวที่รับเข้ามา",
+      "image": "/img/ch3.jpg",
+      "result":""
+    }
+  ]
+  
