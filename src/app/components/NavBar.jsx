@@ -3,15 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { GiHamburgerMenu } from "react-icons/gi";
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
   const [Problems, setProblems] = useState([]);
+  const [selectedProblemId, setSelectedProblemId] = useState(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
+  const closeSidebar = () => {
+    setIsOpen(false);
+  };
+
   const fetchData = async () => {
     try {
       const response = await fetch('/data/problems.json');
@@ -19,40 +28,41 @@ function NavBar() {
       setProblems(data);
     } catch (error) {
       console.error('Error fetching data:', error);
-    } finally {
-
     }
   };
 
   const handleScroll = () => {
-    if (window.scrollY > 0) {
-      setIsFixed(true);
-    } else {
-      setIsFixed(false);
-    }
+    setIsFixed(window.scrollY > 0);
+  };
+
+  const handleProblemClick = (problemId) => {
+    setSelectedProblemId(problemId);
+    setIsOpen(false);
+    router.push(`/problem/${problemId}`);
   };
 
   useEffect(() => {
     fetchData();
-    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-
-    
   }, []);
+
+  useEffect(() => {
+    const currentProblemId = pathname.split('/').pop();
+    setSelectedProblemId(currentProblemId);
+  }, [pathname]);
 
   return (
     <>
       <nav
-        className={`bg-white shadow-md dark:bg-gray-900 ${isFixed ? 'fixed top-0 left-0 w-full z-40' : ''
-          }`}
+        className={`bg-white shadow-md dark:bg-gray-900 ${isFixed ? 'fixed top-0 left-0 w-full z-40' : ''}`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="flex items-center">
                 <img
-                  src="/img/icon.png"
+                  src="/img/logo.png"
                   className="h-8 w-auto sm:h-10"
                   alt="Logo"
                 />
@@ -77,10 +87,16 @@ function NavBar() {
         role="dialog"
         aria-modal="true"
       >
-        <div className="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity ease-in-out duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'}"></div>
+        <div 
+          className={`absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity ease-in-out duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+          onClick={closeSidebar}
+        ></div>
 
         <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex">
-          <div className={`w-screen max-w-md transform transition ease-in-out duration-500 sm:duration-700 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+          <div 
+            className={`w-screen max-w-md transform transition ease-in-out duration-500 sm:duration-700 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
               <div className="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
                 <div className="flex items-start justify-between">
@@ -100,18 +116,20 @@ function NavBar() {
 
                 <div className="mt-8">
                   <div className="flow-root">
-                  {Problems.map((problem) => (
+                    {Problems.map((problem) => (
                       <div key={problem.id} className="px-2 py-2 bg-white rounded-md shadow dark-mode:bg-gray-800">
-                        <Link 
-                          href={`/problem/${problem.id}`} 
-                          className="block px-4 py-2 mt-2 text-lg font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-white focus:text-gray-900 hover:bg-green-500 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                        <button 
+                          onClick={() => handleProblemClick(problem.id)}
+                          className={`block w-full px-4 py-2 mt-2 text-lg font-semibold text-left rounded-lg ${
+                            selectedProblemId === problem.id
+                              ? 'bg-green-500 text-white'
+                              : 'bg-transparent hover:bg-green-500 hover:text-white'
+                          } dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 focus:text-gray-900 focus:bg-gray-200 focus:outline-none focus:shadow-outline`}
                         >
                           {problem.title}
-                        </Link>
+                        </button>
                       </div>
                     ))}
-
-
                   </div>
                 </div>
               </div>
